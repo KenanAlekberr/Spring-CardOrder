@@ -1,12 +1,12 @@
-package com.example.texnoerams.exception.card;
+package com.example.texnoerams.exception;
 
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import static org.springframework.http.HttpStatus.CONFLICT;
 
 @ResponseStatus(value = CONFLICT)
-public class CardAlreadyException extends RuntimeException {
-    public CardAlreadyException(String message) {
+public class AlreadyExistException extends RuntimeException {
+    public AlreadyExistException(String message) {
         super(message);
     }
 }

@@ -21,7 +21,6 @@ public class CustomerResponse {
     String firstName;
     String lastName;
     String fin;
-    Integer pincode;
     Status status;
     LocalDateTime createdAt;
     LocalDateTime updatedAt;

@@ -6,7 +6,14 @@ import com.example.texnoerams.dto.response.CustomerResponse;
 import com.example.texnoerams.service.abstraction.CustomerService;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -15,7 +22,7 @@ import static lombok.AccessLevel.PRIVATE;
 @RestController
 @FieldDefaults(level = PRIVATE, makeFinal = true)
 @RequestMapping("/api/v1/customer")
-@RequiredArgsConstructor()
+@RequiredArgsConstructor
 public class CustomerController {
     CustomerService customerService;
 

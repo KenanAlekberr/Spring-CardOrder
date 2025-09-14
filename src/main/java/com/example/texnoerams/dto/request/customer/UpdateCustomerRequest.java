@@ -16,6 +16,4 @@ import static lombok.AccessLevel.PRIVATE;
 public class UpdateCustomerRequest {
     String firstName;
     String lastName;
-    String fin;
-    Integer pincode;
 }

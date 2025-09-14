@@ -1,7 +1,11 @@
 package com.example.texnoerams.dao.entity;
 
 import com.example.texnoerams.enums.Status;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -31,8 +35,6 @@ public class CustomerEntity {
     String firstName;
     String lastName;
     String fin;
-
-    Integer pincode;
 
     @Enumerated(STRING)
     Status status;

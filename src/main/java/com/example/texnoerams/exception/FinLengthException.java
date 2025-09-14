@@ -1,12 +1,12 @@
-package com.example.texnoerams.exception.customer;
+package com.example.texnoerams.exception;
 
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import static org.springframework.http.HttpStatus.CONFLICT;
 
 @ResponseStatus(value = CONFLICT)
-public class CustomerAlreadyExistException extends RuntimeException {
-    public CustomerAlreadyExistException(String message) {
+public class FinLengthException extends RuntimeException {
+    public FinLengthException(String message) {
         super(message);
     }
 }

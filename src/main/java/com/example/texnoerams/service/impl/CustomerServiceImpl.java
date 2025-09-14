@@ -5,10 +5,11 @@ import com.example.texnoerams.dao.repository.CustomerRepository;
 import com.example.texnoerams.dto.request.customer.CreateCustomerRequest;
 import com.example.texnoerams.dto.request.customer.UpdateCustomerRequest;
 import com.example.texnoerams.dto.response.CustomerResponse;
-import com.example.texnoerams.exception.customer.CustomerAlreadyExistException;
-import com.example.texnoerams.exception.customer.CustomerNotFoundException;
-import com.example.texnoerams.exception.customer.FinLengthException;
+import com.example.texnoerams.exception.AlreadyExistException;
+import com.example.texnoerams.exception.FinLengthException;
+import com.example.texnoerams.exception.NotFoundException;
 import com.example.texnoerams.service.abstraction.CustomerService;
+import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
@@ -16,30 +17,26 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.texnoerams.enums.Status.*;
+import static com.example.texnoerams.enums.Status.ACTIVE;
+import static com.example.texnoerams.enums.Status.DELETED;
+import static com.example.texnoerams.enums.Status.IN_PROGRESS;
 import static lombok.AccessLevel.PRIVATE;
 
 @Service
-@RequiredArgsConstructor()
+@RequiredArgsConstructor
 @FieldDefaults(level = PRIVATE, makeFinal = true)
 public class CustomerServiceImpl implements CustomerService {
     CustomerRepository customerRepository;
 
     @Override
     public CustomerResponse createCustomer(CreateCustomerRequest request) {
-        if (customerRepository.existsByFin(request.getFin()))
-            throw new CustomerAlreadyExistException("Customer with this FIN already exists!");
+        CustomerEntity customer = buildCustomerEntity(request);
 
-        CustomerEntity customer = CustomerEntity.builder()
-                .firstName(request.getFirstName())
-                .lastName(request.getLastName())
-                .fin(request.getFin())
-                .pincode(request.getPincode())
-                .status(ACTIVE)
-                .build();
-
-        if (customer.getFin().length() != 7)
+        if (request.getFin().length() != 7)
             throw new FinLengthException("Fin should be 7 digits");
+
+        if (customerRepository.existsByFin(request.getFin()))
+            throw new AlreadyExistException("Customer with this FIN already exists!");
 
         customerRepository.save(customer);
 
@@ -62,7 +59,6 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public CustomerResponse getCustomerById(Long id) {
         CustomerEntity customer = fetchCustomerIfExist(id);
-
         return buildCustomerResponse(customer);
     }
 
@@ -70,16 +66,15 @@ public class CustomerServiceImpl implements CustomerService {
     public CustomerResponse updateCustomer(Long id, UpdateCustomerRequest request) {
         CustomerEntity customer = fetchCustomerIfExist(id);
 
-        if (request.getFirstName() != null && !request.getFirstName().trim().isEmpty()) {
+        if (StringUtils.isNotEmpty(request.getFirstName())) {
             customer.setFirstName(request.getFirstName());
         }
 
-        if (request.getLastName() != null) {
+        if (StringUtils.isNotEmpty(request.getLastName())) {
             customer.setLastName(request.getLastName());
         }
 
         customer.setStatus(IN_PROGRESS);
-
         customerRepository.save(customer);
 
         return buildCustomerResponse(customer);
@@ -93,9 +88,21 @@ public class CustomerServiceImpl implements CustomerService {
         customerRepository.save(customer);
     }
 
+    @Override
+    public CustomerEntity getCustomerByFin(String fin) {
+        List<CustomerEntity> customers = customerRepository.findAll();
+
+        for (CustomerEntity customer : customers) {
+            if (customer.getFin().equals(fin))
+                return customer;
+        }
+
+        return null;
+    }
+
     private CustomerEntity fetchCustomerIfExist(Long id) {
         return customerRepository.findById(id).orElseThrow(() ->
-                new CustomerNotFoundException("Customer not found: " + id));
+                new NotFoundException("Customer not found: " + id));
     }
 
     private CustomerResponse buildCustomerResponse(CustomerEntity customer) {
@@ -104,10 +111,18 @@ public class CustomerServiceImpl implements CustomerService {
                 .firstName(customer.getFirstName())
                 .lastName(customer.getLastName())
                 .fin(customer.getFin())
-                .pincode(customer.getPincode())
                 .status(customer.getStatus())
                 .createdAt(customer.getCreatedAt())
                 .updatedAt(customer.getUpdatedAt())
+                .build();
+    }
+
+    private CustomerEntity buildCustomerEntity(CreateCustomerRequest request) {
+        return CustomerEntity.builder()
+                .firstName(request.getFirstName())
+                .lastName(request.getLastName())
+                .fin(request.getFin())
+                .status(ACTIVE)
                 .build();
     }
 }

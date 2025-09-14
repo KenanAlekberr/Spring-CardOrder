@@ -1,5 +1,6 @@
 package com.example.texnoerams.service.abstraction;
 
+import com.example.texnoerams.dao.entity.CustomerEntity;
 import com.example.texnoerams.dto.request.customer.CreateCustomerRequest;
 import com.example.texnoerams.dto.request.customer.UpdateCustomerRequest;
 import com.example.texnoerams.dto.response.CustomerResponse;
@@ -16,4 +17,6 @@ public interface CustomerService {
     CustomerResponse updateCustomer(Long id, UpdateCustomerRequest request);
 
     void deleteCustomer(Long id);
+
+    CustomerEntity getCustomerByFin(String fin);
 }

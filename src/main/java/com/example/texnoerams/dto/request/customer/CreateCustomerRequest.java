@@ -17,5 +17,4 @@ public class CreateCustomerRequest {
     String firstName;
     String lastName;
     String fin;
-    Integer pincode;
 }

@@ -21,8 +21,8 @@ import static lombok.AccessLevel.PRIVATE;
 @Entity
 @FieldDefaults(level = PRIVATE)
 @Table(name = "cards")
-@AllArgsConstructor()
-@NoArgsConstructor()
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class CardEntity {
     @Id
