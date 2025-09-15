@@ -1,5 +1,6 @@
 package com.example.texnoerams.dto.response;
 
+import com.example.texnoerams.dao.entity.CustomerEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,8 +19,7 @@ import static lombok.AccessLevel.PRIVATE;
 public class CardResponse {
     Long id;
     String cardNumber;
-    String cvv;
-    String pin;
     LocalDateTime createdAt;
     LocalDateTime expiredAt;
+    CustomerEntity customer;
 }
