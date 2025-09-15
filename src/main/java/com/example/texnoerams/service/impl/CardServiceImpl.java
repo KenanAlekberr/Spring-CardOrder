@@ -41,22 +41,11 @@ public class CardServiceImpl implements CardService {
     @Override
     public CardResponse changePin(Long cardId, String newPin) {
         CardEntity card = cardRepository.findById(cardId).orElseThrow(() -> new RuntimeException("Card not found"));
-        CustomerEntity customer = customerService.getCustomerByFin(card.getCustomerFin());
 
         card.setPin(newPin);
         cardRepository.save(card);
 
-        return CardResponse.builder().id(card.getId()).cardNumber(card.getCardNumber()).createdAt(card.getCreatedAt()).expiredAt(card.getExpiredAt())
-                .customer(CustomerEntity.builder()
-                        .id(customer.getId())
-                        .firstName(customer.getFirstName())
-                        .lastName(customer.getLastName())
-                        .fin(customer.getFin())
-                        .status(customer.getStatus())
-                        .createdAt(customer.getCreatedAt())
-                        .updatedAt(customer.getUpdatedAt())
-                        .build())
-                .build();
+        return buildCardResponse(card);
     }
 
     @Override
