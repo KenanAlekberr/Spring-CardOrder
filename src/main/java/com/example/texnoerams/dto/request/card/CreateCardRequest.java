@@ -15,5 +15,4 @@ import static lombok.AccessLevel.PRIVATE;
 @Builder
 public class CreateCardRequest {
     String customerFin;
-    String cardNumber;
 }

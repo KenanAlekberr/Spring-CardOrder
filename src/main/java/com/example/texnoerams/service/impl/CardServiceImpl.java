@@ -31,7 +31,7 @@ public class CardServiceImpl implements CardService {
         CustomerEntity customer = customerService.getCustomerByFin(request.getCustomerFin());
         if (customer == null) throw new NotFoundException("Customer not found by fin: " + request.getCustomerFin());
 
-        CardEntity card = CardEntity.builder().customerFin(customer.getFin()).cardNumber(request.getCardNumber()).cvv(generateRandomNumber(3)).pin(generatePinFromCardNumber(generateRandomNumber(16))).createdAt(LocalDateTime.now()).expiredAt(LocalDateTime.now().plusYears(5)).build();
+        CardEntity card = CardEntity.builder().customerFin(customer.getFin()).cardNumber(generateRandomNumber(16)).cvv(generateRandomNumber(3)).pin(generatePinFromCardNumber(generateRandomNumber(16))).createdAt(LocalDateTime.now()).expiredAt(LocalDateTime.now().plusYears(5)).build();
 
         cardRepository.save(card);
 
